@@ -1,0 +1,10 @@
+{
+    "dev": {
+        "app_function": "controller.app",
+        "aws_region": "us-east-2",
+        "profile_name": "default",
+        "project_name": "gatubot",
+        "runtime": "python3.8",
+        "s3_bucket": "zappa-sax7619iz"
+    }
+}
