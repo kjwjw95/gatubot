@@ -14,7 +14,7 @@ def news_kor():
     for i in metadata:
         new = {'title': i.a.get_text(), 'href': i.a.get('href')}
         news.append(new)
-    return json.dumps(news)
+    return json.dumps(news, ensure_ascii=False)
 
 
 def news_usa():
@@ -37,7 +37,7 @@ def news_usa():
         new = {'kor_title': json.loads(translate.text)[
             'translated_text'][0][0], 'href': i.a.get('href'), 'eng_title': title}
         news.append(new)
-    return json.dumps(news)
+    return json.dumps(news, ensure_ascii=False)
 
 
 def getnews(lng):
@@ -45,4 +45,4 @@ def getnews(lng):
     if lng == 'kor':
         return news_kor()
     else:
-        return news_eng()
+        return news_usa()

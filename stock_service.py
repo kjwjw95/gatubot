@@ -36,10 +36,17 @@ def get_stock_list():
 # 주식 정렬 리스트를 불러오는 메소드
 
 
-def get_stock_sort(roe=-100, eps=-100, debt=500):
-    query = {'roe.2020.third_quarter': {'$gt': roe}, 'roe.2020.second_quarter': {'$gt': roe}, 'roe.2020.first_quarter': {'$gt': roe},
-             'eps_increase.2020': {'$gt': eps}, 'eps_increase.2020': {'$gt': eps}, 'eps_increase.2020': {'$gt': eps},
-             'eps.2020.third_quarter': {'$gt': 0}, 'debt': {'$lt': debt}}
+def get_stock_sort(roe, eps, debt):
+    r = float(roe)
+    e = float(eps)
+    d = float(debt)
+    query = {'roe.2020.third_quarter': {'$gt': r}, 'roe.2020.second_quarter': {'$gt': r}, 'roe.2020.first_quarter': {'$gt': r},
+             'eps_increase.2018': {'$gt': e}, 'eps_increase.2019': {'$gt': e}, 'eps_increase.2020': {'$gt': e}, 'debt': {'$lt': d}}
+    # result = stock_db.find(query)
+    # print(query)
+    # for i in result:
+    #     print(i)
+    # print(r, ' ', e, ' ', d)
     return dumps(stock_db.find(query), ensure_ascii=False)
 
 # 주식 추천 리스트를 불러오는 메소드
@@ -50,12 +57,12 @@ def get_stock_recommend():
         '$lt': 100.0}, 'profit.2020.third_quarter': {'$gt': 0}, 'profit.2020.first_quarter': {'$gt': 0}, 'profit.2020.second_quarter': {'$gt': 0}}
     lists = stock_db.find(query)
     result = []
-    for l in lists:
-        try:
-            cd = l['code']
-            stock = stock_cal(cd)
-            if l['rim'] > stock:
-                result.append(l)
-        except:
-            continue
-    return dumps(result, ensure_ascii=False)
+    # for l in lists:
+    #     try:
+    #         cd = l['code']
+    #         stock = stock_cal(cd)
+    #         if l['rim'] > stock:
+    #             result.append(l)
+    #     except:
+    #         continue
+    return dumps(lists, ensure_ascii=False)
