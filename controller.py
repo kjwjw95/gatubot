@@ -1,6 +1,6 @@
 import traceback
 import os
-
+import json
 from flask import request, url_for, jsonify
 from flask_api import FlaskAPI, status, exceptions
 # from flask_jwt_extended import ( JWTManager, jwt_required, create_access_token, create_refresh_token, get_jwt_identity, jwt_refresh_token_required )
@@ -51,18 +51,21 @@ def get_news(lng):
 def get_stockinfo():
     code = request.args.get('code')
     result = stock_service.get_stock_info(code)
-
-    return jsonify({'code': 200, 'msg': 'SUCCESS', 'stock': result}), status.HTTP_200_OK
+    resp = jsonify({'code': 200, 'msg': 'SUCCESS',
+                    'stock': json.loads(result)})
+    resp.status_code = 200
+    return resp
 
 # 주식 리스트를 불러오는 메소드
 
 
 @app.route('/stock/list', methods=['GET'])
 def get_stocklist():
-
     result = stock_service.get_stock_list()
-
-    return jsonify({'code': 200, 'msg': 'SUCCESS', 'stocks': result}), status.HTTP_200_OK
+    resp = jsonify({'code': 200, 'msg': 'SUCCESS',
+                    'stock': json.loads(result)})
+    resp.status_code = 200
+    return resp
 
 # 주식 정렬 리스트를 불러오는 메소드
 
@@ -78,5 +81,8 @@ def get_stocklist2():
 # 주식 추천 리스트를 불러오는 메소드
 @app.route('/stock/recommend', methods=['GET'])
 def get_stocklist3():
-
-    return jsonify({'code': 200, 'msg': 'SUCCESS', 'stocks': stock_service.get_stock_recommend()}), status.HTTP_200_OK
+    result = stock_service.get_stock_recommend()
+    resp = jsonify({'code': 200, 'msg': 'SUCCESS',
+                    'stock': json.loads(result)})
+    resp.status_code = 200
+    return resp
