@@ -147,7 +147,6 @@ def get_stock_info(code):
     result["share"] = share
     result["per"] = Per_quater(result["eps"], year, stock_quater)
     result["pbr"] = Pbr_quater(result["bps"], year, stock_quater)
-    result["point"] = Point_cal(result)
     return dumps(result)
 
 # 주식 리스트를 불러오는 메소드
