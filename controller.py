@@ -7,8 +7,8 @@ from flask_api import FlaskAPI, status, exceptions
 
 # from functools import wraps
 
-import stock_service
-import news_service
+import kor_service
+import eng_service
 
 app = FlaskAPI(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -34,55 +34,56 @@ def error_decorator(f):
 def ping():
     return jsonify({'code': 200, 'msg': 'success'}), status.HTTP_200_OK
 
-# 뉴스를 불러오는 메소드
+# 한국서비스를 불러오는 메소드
 
 
-@app.route('/news/<lng>', methods=['GET'])
-def get_news(lng):
+@app.route('/kor/<bif>', methods=['GET'])
+def get_kor(bif):
+    try:
+        if bif == "news":
+            result = kor_service.get_news()
+        elif bif == "lists":
+            result = json.loads(
+                kor_service.get_lists())
+        elif bif == "stocks":
+            result = json.loads(
+                kor_service.get_stocks(request.args.get('code')))
+        elif bif == "classfys":
+            result = json.loads(kor_service.get_classfys(request.args.get('roe', 0), request.args.get(
+                'eps', 0), request.args.get('debt', 500), request.args.get('page', 0), request.args.get('offset', 10)))
+        elif bif == "recommends":
+            result = json.loads(kor_service.get_recommends(request.args.get(
+                'kinds', 'excellent'), request.args.get('page', 0), request.args.get('offset', 10)))
+        else:
+            return jsonify({'code': 400, 'msg': 'error'}), status.HTTP_400_BAD_REQUEST
 
-    result = news_service.getnews(lng)
+        return jsonify({'code': 200, 'msg': 'SUCCESS', 'result': result}), status.HTTP_200_OK
+    except:
+        return jsonify({'code': 400, 'msg': 'error'}), status.HTTP_400_BAD_REQUEST
 
-    return jsonify({'code': 200, 'msg': 'SUCCESS', 'news': result}), status.HTTP_200_OK
-
-# 검색한 주식의 정보를 불러오는 메소드
-
-
-@app.route('/stock/info', methods=['GET'])
-def get_stockinfo():
-    code = request.args.get('code')
-    result = stock_service.get_stock_info(code)
-    resp = jsonify({'code': 200, 'msg': 'SUCCESS',
-                    'stock': json.loads(result)})
-    resp.status_code = 200
-    return resp
-
-# 주식 리스트를 불러오는 메소드
-
-
-@app.route('/stock/list', methods=['GET'])
-def get_stocklist():
-    result = stock_service.get_stock_list()
-    resp = jsonify({'code': 200, 'msg': 'SUCCESS',
-                    'stock': json.loads(result)})
-    resp.status_code = 200
-    return resp
-
-# 주식 정렬 리스트를 불러오는 메소드
+# 미국서비스를 불러오는 메소드
 
 
-@app.route('/stock/sort', methods=['GET'])
-def get_stocklist2():
-    roes = request.args.get('roe', 0)
-    epss = request.args.get('eps', 0)
-    deb = request.args.get('debt', 500)
-    return jsonify({'code': 200, 'msg': 'SUCCESS', 'stocks': stock_service.get_stock_sort(roe=roes, eps=epss, debt=deb)}), status.HTTP_200_OK
+@ app.route('/eng/<bif>', methods=['GET'])
+def get_eng(bif):
+    try:
+        if bif == "news":
+            result = eng_service.get_news()
+        elif bif == "lists":
+            result = json.loads(
+                eng_service.get_lists())
+        elif bif == "stocks":
+            result = json.loads(
+                eng_service.get_stocks(request.args.get('code')))
+        elif bif == "classfys":
+            result = json.loads(eng_service.get_classfys(peg=request.args.get(
+                'peg', 5), eps=request.args.get('eps', 0), roe=request.args.get('roe', 0), pages=request.args.get('page', 0), offsets=request.args.get('offset', 10)))
+        elif bif == "recommends":
+            result = json.loads(eng_service.get_recommends(
+                request.args.get('kinds', 'excellent'), request.args.get('page', 0), request.args.get('offset', 10)))
+        else:
+            return jsonify({'code': 400, 'msg': 'error'}), status.HTTP_400_BAD_REQUEST
 
-
-# 주식 추천 리스트를 불러오는 메소드
-@app.route('/stock/recommend', methods=['GET'])
-def get_stocklist3():
-    result = stock_service.get_stock_recommend()
-    resp = jsonify({'code': 200, 'msg': 'SUCCESS',
-                    'stock': json.loads(result)})
-    resp.status_code = 200
-    return resp
+        return jsonify({'code': 200, 'msg': 'SUCCESS', 'result': result}), status.HTTP_200_OK
+    except:
+        return jsonify({'code': 400, 'msg': 'error'}), status.HTTP_400_BAD_REQUEST
