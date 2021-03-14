@@ -3,9 +3,6 @@ import os
 import json
 from flask import request, url_for, jsonify
 from flask_api import FlaskAPI, status, exceptions
-# from flask_jwt_extended import ( JWTManager, jwt_required, create_access_token, create_refresh_token, get_jwt_identity, jwt_refresh_token_required )
-
-# from functools import wraps
 
 import kor_service
 import eng_service
