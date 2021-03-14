@@ -3,8 +3,9 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import pymongo
+import api_code
 from bson.json_util import dumps
-url = 'mongodb+srv://kjw95:wjddnr1212@cluster0.i61ze.mongodb.net/gatuant?retryWrites=true&w=majority'
+url = api_code.mongodb_url
 client = pymongo.MongoClient(url)
 db = client.gatuant
 nasdaq_db = db["nasdaq_info"]

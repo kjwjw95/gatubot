@@ -3,11 +3,12 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import pymongo
+import api_code
 from bson.json_util import dumps
 # import pandas as pd
 # import pandas_datareader as pdr
 # from datetime import date, timedelta, datetime
-url = 'mongodb+srv://kjw95:wjddnr1212@cluster0.i61ze.mongodb.net/gatuant?retryWrites=true&w=majority'
+url = api_code.mongodb_url
 client = pymongo.MongoClient(url)
 db = client.gatuant
 stock_db = db["stock_info"]
@@ -58,15 +59,16 @@ def get_recommends(kinds, pages, offsets):
     offset = int(offsets)
     if kinds == "excellent":
         query = {'peg': {'$gt': 0, '$lt': 1.0}, 'point': {
-            '$gt': 10.0}, 'market_cap': {'$gt': 785500000000}}
+            '$gt': 10.0}, 'market_cap': {'$gt': 785500000000}, 'volume_price': {'$gt': 3000000000}}
         sorting = [("market_cap", pymongo.DESCENDING),
                    ("point", pymongo.DESCENDING), ("code", pymongo.DESCENDING)]
     elif kinds == "grow":
-        query = {'point': {'$gt': 12.0}, 'eps_increase.2020': {'$gt': 10.0}}
+        query = {'point': {'$gt': 10.0}, 'eps_increase.2020': {
+            '$gt': 10.0}, 'volume_price': {'$gt': 3000000000}}
         sorting = [("eps_increase.2020", pymongo.DESCENDING),
                    ("point", pymongo.DESCENDING), ("cd", pymongo.DESCENDING)]
     elif kinds == "point":
-        query = {'point': {'$gt': 13.0}}
+        query = {'point': {'$gt': 12.0}, 'volume_price': {'$gt': 3000000000}}
         sorting = [("point", pymongo.DESCENDING),
                    ("peg", pymongo.DESCENDING), ("cd", pymongo.DESCENDING)]
     return dumps(stock_db.find(query).sort(sorting).skip(page*offset).limit(offset))
