@@ -45,9 +45,11 @@ def get_kor(bif):
         elif bif == "stocks":
             result = json.loads(
                 kor_service.get_stocks(request.args.get('code')))
+            # result += json.loads({'test': 'test'})
+            print(type(result))
         elif bif == "classfys":
-            result = json.loads(kor_service.get_classfys(request.args.get('roe', 0), request.args.get(
-                'eps', 0), request.args.get('debt', 500), request.args.get('page', 0), request.args.get('offset', 10)))
+            result = json.loads(kor_service.get_classfys(roe=request.args.get('roe', 0), eps=request.args.get(
+                'eps', 0), peg=request.args.get('peg', 5), pages=request.args.get('page', 0), offsets=request.args.get('offset', 10)))
         elif bif == "recommends":
             result = json.loads(kor_service.get_recommends(request.args.get(
                 'kinds', 'excellent'), request.args.get('page', 0), request.args.get('offset', 10)))
@@ -65,7 +67,8 @@ def get_kor(bif):
 def get_eng(bif):
     try:
         if bif == "news":
-            result = eng_service.get_news()
+            result = json.loads(eng_service.get_news(pages=request.args.get(
+                'page', 0), offsets=request.args.get('offset', 10)))
         elif bif == "lists":
             result = json.loads(
                 eng_service.get_lists())
